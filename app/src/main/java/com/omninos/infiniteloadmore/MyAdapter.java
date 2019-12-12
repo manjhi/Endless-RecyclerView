@@ -19,14 +19,16 @@ import java.util.List;
  */
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.VHolder> implements Filterable {
 
-    private List<String> list;
-    private List<String> tempList;
+    private List<MyModel.Detail> list;
+    private List<MyModel.Detail> tempList;
+    private List<MyModel.Detail> tempList1;
     Context context;
 
-    public MyAdapter(List<String> list, Context context) {
-        this.list = list;
+    public MyAdapter(List<MyModel.Detail> list,List<MyModel.Detail> list1, Context context) {
+        this.list = list1;
         this.context = context;
         this.tempList = list;
+        this.tempList1 = list;
     }
 
     @NonNull
@@ -38,7 +40,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.VHolder> implement
 
     @Override
     public void onBindViewHolder(@NonNull VHolder holder, int position) {
-        holder.textData.setText(tempList.get(position));
+        holder.textData.setText(tempList.get(position).getName());
     }
 
     @Override
@@ -51,15 +53,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.VHolder> implement
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
-                String charString = charSequence.toString();
+                String charString = charSequence.toString().toLowerCase();
 
                 if (charString.isEmpty()) {
-                    tempList = list;
+                    tempList = tempList1;
                 } else {
-                    ArrayList<String> filteredList = new ArrayList<>();
+                    ArrayList<MyModel.Detail> filteredList = new ArrayList<>();
 
-                    for (String s : list) {
-                        if (s.contains(charString)) {
+                    for (MyModel.Detail s : list) {
+                        if (s.getName().toLowerCase().contains(charString)) {
                             filteredList.add(s);
                         }
                     }
@@ -72,7 +74,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.VHolder> implement
 
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                tempList = (ArrayList<String>) filterResults.values;
+                tempList = (ArrayList<MyModel.Detail>) filterResults.values;
                 notifyDataSetChanged();
             }
         };
